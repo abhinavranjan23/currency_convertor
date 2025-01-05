@@ -2,10 +2,9 @@
   "name": "currencyconverter",
   "version": "1.0.0",
   "description": "its a currency converter app",
-  "main": "app.js",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
+    "start": "parcel public/index.html",
+    "build": "parcel build public/index.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Abhinav Ranjan",

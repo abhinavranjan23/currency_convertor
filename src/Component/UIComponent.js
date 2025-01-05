@@ -1,57 +1,18 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import "./app.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { useState, useEffect } from "react";
-import countryList from "./contrylist";
-const AppLayout = () => {
-  const [result, setResult] = useState("0");
-  const [amountVal, setAmountVal] = useState("");
-  const [rate, setRate] = useState("");
-  const [fromvar, setFromvar] = useState({
-    currencyCode: "INR",
-    countryCode: "IN",
-  });
-  const [tovar, setToVar] = useState({
-    currencyCode: "USD",
-    countryCode: "US",
-  });
+import countryList from "../utils/contrylist";
 
-  const handleChangeFrom = (e) => {
-    const [currencyCode, countryCode] = e.target.value.split(",");
-    setFromvar({ currencyCode, countryCode });
-    console.log("hanle on change");
-    console.log(fromvar);
-  };
-  const handleChangeTo = (e) => {
-    console.log("to to change called ");
-    const [currencyCode, countryCode] = e.target.value.split(",");
-    setToVar({ currencyCode, countryCode });
-    console.log(tovar);
-  };
-
-  const inputAmtUpdate = (e) => {
-    setAmountVal(e.target.value);
-  };
-  useEffect(() => {
-    console.log("useeffect called");
-    fetchApi();
-  }, [fromvar, tovar]);
-  const fetchApi = async () => {
-    const data = await fetch(
-      `https://latest.currency-api.pages.dev/v1/currencies/${fromvar.currencyCode.toLowerCase()}.json`
-    );
-    const json = await data.json();
-    const fetchedRate =
-      json?.[fromvar.currencyCode.toLowerCase()]?.[
-        tovar.currencyCode.toLowerCase()
-      ];
-    setRate(fetchedRate);
-  };
-  const exchangeRate = async () => {
-    setResult(parseFloat(amountVal * rate).toFixed(3));
-  };
+const UIComponent = ({
+  amountVal,
+  result,
+  fromvar,
+  tovar,
+  handleAmountChange,
+  handleChangeFrom,
+  handleChangeTo,
+  calculateExchangeRate,
+}) => {
   return (
     <div id='body'>
       <h1>Currency Converter</h1>
@@ -63,7 +24,7 @@ const AppLayout = () => {
           name='searchInput'
           placeholder='Enter the amount'
           value={amountVal}
-          onChange={inputAmtUpdate}
+          onChange={handleAmountChange}
         />
 
         <div id='select-container'>
@@ -87,6 +48,7 @@ const AppLayout = () => {
             </select>
             <img
               src={`https://flagsapi.com/${fromvar.countryCode}/shiny/64.png`}
+              alt='From Country Flag'
             />
           </div>
           <FontAwesomeIcon
@@ -113,10 +75,11 @@ const AppLayout = () => {
             </select>
             <img
               src={`https://flagsapi.com/${tovar.countryCode}/shiny/64.png`}
+              alt='To Country Flag'
             />
           </div>
         </div>
-        <button id='bttn' onClick={exchangeRate}>
+        <button id='bttn' onClick={calculateExchangeRate}>
           Get The Exchange Rate
         </button>
         <div id='result'>
@@ -128,5 +91,5 @@ const AppLayout = () => {
     </div>
   );
 };
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppLayout />);
+
+export default UIComponent;
